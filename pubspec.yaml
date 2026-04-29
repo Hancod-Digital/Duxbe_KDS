@@ -1,0 +1,215 @@
+name: duxbe_kds
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0-93.1.beta
+
+dependencies:
+  animations: ^2.0.11
+  another_flushbar: ^1.12.30
+  audioplayers: ^6.1.1
+  barcode: ^2.2.8
+  cached_network_image: ^3.4.1
+  collection: ^1.18.0
+  connectivity_plus: ^7.0.0
+  cupertino_icons: ^1.0.8
+  defer_pointer: ^0.0.2
+  dio: ^5.7.0
+  dotted_border: ^3.1.0
+  dropdown_search: ^6.0.2
+  facebook_app_events: ^0.24.0
+  file_picker: ^10.3.7
+  
+  firebase_core: ^4.1.0
+  firebase_crashlytics: ^5.0.1
+  firebase_messaging: ^16.0.1
+  fl_chart: ^1.1.0
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+  flutter_form_builder: ^10.0.1
+  flutter_iconpicker: ^4.0.3
+  flutter_localizations:
+    sdk: flutter
+  flutter_markdown: ^0.7.7
+  flutter_quill: ^11.5.0
+  flutter_riverpod: ^3.0.0-dev.17
+  flutter_slidable: ^4.0.1
+  flutter_svg: ^2.0.10+1
+  flutter_timezone: ^5.0.1
+  flutter_libserialport: ^0.6.0
+  flutter_web_plugins:
+    sdk: flutter
+  form_builder_extra_fields: ^12.0.0
+  form_builder_validators: ^11.1.2
+  freezed_annotation: ^3.0.0
+  go_router: ^17.0.1
+  grouped_list: ^6.0.0
+  hancod_theme:
+    path: packages/hancod_theme
+  http: ^1.2.2
+  image: ^4.5.4
+  image_picker: ^1.1.2
+  infinite_scroll_pagination: ^5.1.1
+  intl: ^0.20.2
+  json_annotation: ^4.9.0
+  multi_dropdown: ^3.0.1
+  native_device_orientation: ^2.0.3
+  network_info_plus: ^7.0.0
+  package_info_plus: ^9.0.0
+  path: ^1.9.0
+  path_provider: ^2.1.4
+  pdf: ^3.11.1
+  permission_handler: ^12.0.1
+  phone_form_field: ^10.0.8
+  ping_discover_network_forked: ^0.0.1
+  pinput:
+    path: packages/Flutter_Pinput
+  printing: ^5.13.3
+  riverpod: ^3.0.0-dev.17
+  riverpod_annotation: ^3.0.0-dev.17
+  riverpod_sqflite: ^0.3.3
+  scaled_app: ^2.3.0
+  shared_preferences: ^2.3.2
+  shimmer: ^3.0.0
+  sliver_tools: ^0.2.12
+  socket_io_client: ^3.0.2
+  share_plus: ^12.0.1
+  sticky_grouped_list: ^3.1.0
+  sticky_headers: ^0.3.0+2
+  supabase_flutter: ^2.12.0
+  super_drag_and_drop: ^0.9.1
+  timezone: ^0.11.0
+  trina_grid: ^2.0.2
+  universal_ble: ^1.1.0
+  upgrader: ^12.5.0
+  url_launcher: ^6.3.1
+  uuid: ^4.5.1
+  web: ^1.1.0
+  usb_serial: ^0.5.2
+  sqflite_common_ffi_web: ^1.0.1+1
+  reactive_forms: ^18.2.2
+  equatable: ^2.0.7
+  horizontal_data_table: ^4.3.3
+  flutter_typeahead: ^5.2.0
+  qr_flutter: ^4.1.0
+  device_info_plus: ^11.5.0
+  version: ^3.0.2
+  toastification: ^3.0.3
+  reactive_forms_annotations: ^8.0.1
+  flutter_local_notifications: ^21.0.0-dev.1
+  smart_auth: ^3.2.0
+  google_sign_in: ^7.2.0
+  sign_in_with_apple: ^7.0.1
+  crypto: ^3.0.7
+  firebase_auth: ^6.2.0
+  youtube_player_flutter: ^9.1.3
+  commingle_money: ^1.0.0
+
+dependency_overrides:
+  flutter_keyboard_visibility_web:
+    path: packages/flutter_keyboard_visibility_web-2.0.0
+  intl: ^0.20.2
+  form_builder_extra_fields: ^12.0.0
+  flutter_form_builder: ^10.0.1
+  dropdown_search: ^6.0.2
+  font_awesome_flutter: 10.7.0
+  analyzer_plugin: 0.13.10
+  flutter_libserialport:
+    git:
+      url: https://github.com/salah-taha/flutter_libserialport
+  irondash_engine_context:
+    git:
+      url: https://github.com/Sabbar-Engineering/irondash
+      path: "engine_context/dart"
+
+dev_dependencies:
+  build_runner: 2.13.1
+  flutter_gen_runner: ^5.11.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^3.1.0
+  json_serializable: ^6.8.0
+  mocktail: ^1.0.4
+  msix: ^3.16.13
+  riverpod_generator: ^3.0.0-dev.16
+  riverpod_lint: ^3.0.0-dev.16
+  very_good_analysis: ^10.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+    - assets/sounds/
+    - assets/markdowns/
+    - shorebird.yaml
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter-ExtraBold.ttf
+          weight: 800
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+    - family: NatoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-Regular.ttf
+        - asset: assets/fonts/NotoSansArabic-Light.ttf
+        - asset: assets/fonts/NotoSansArabic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansArabic-Bold.ttf
+          weight: 700
+
+flutter_gen:
+  output: lib/shared/utils/ # Optional (default: lib/gen/)
+  line_length: 80 # Optional (default: 80)
+
+  # Optional
+  integrations:
+    flutter_svg: true
+    rive: true
+    lottie: true
+
+msix_config:
+  display_name: Duxbe
+  publisher_display_name: Hancod Digital Pvt Lmt.
+  identity_name: com.duxbe.business
+  msix_version: 1.0.0.0
+  logo_path: .\assets\images\duxbe_whitebg.png
+  capabilities: internetClient, location, microphone, webcam
+  windows_build_args: -t lib\main_production.dart --no-tree-shake-icons --dart-define-from-file=env\env.prod.json
+  sign_msix: true
+
+ 
