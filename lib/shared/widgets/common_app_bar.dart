@@ -13,17 +13,18 @@ class CustomAppBar extends PreferredSize {
   }) : super(
          preferredSize: const Size.fromHeight(kToolbarHeight),
          child: Container(
-           decoration: BoxDecoration(
-             boxShadow: [
-               BoxShadow(
-                 offset: const Offset(0, 2),
-                 blurRadius: 6,
-                 color: const Color(0xff1B1D3C).withOpacity(.07),
-               ),
-             ],
-           ),
+           //  decoration: BoxDecoration(
+           //    boxShadow: [
+           //      BoxShadow(
+           //        offset: const Offset(0, 2),
+           //        blurRadius: 6,
+           //        color: const Color(0xff1B1D3C).withOpacity(.07),
+           //      ),
+           //    ],
+           //  ),
            child: AppBar(
              title: title,
+             backgroundColor: AppColors.greyBorder,
              centerTitle: centerTitle,
              actions: actions,
              automaticallyImplyLeading: false,
@@ -51,7 +52,7 @@ class CustomAppBar extends PreferredSize {
                                  shape: RoundedRectangleBorder(
                                    borderRadius: BorderRadius.circular(8),
                                  ),
-                                 color: const Color(0xffF7F8F8),
+                                 //  color: const Color(0xffF7F8F8),
                                ),
                                child: InkWell(
                                  borderRadius: BorderRadius.circular(8),

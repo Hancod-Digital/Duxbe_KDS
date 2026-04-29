@@ -8,5 +8,6 @@ export 'loading_provider.dart';
 export 'pdf_platform_provider/pdf_platform_provider.dart';
 export 'router_provider/router_provider.dart';
 export 'shared_prefs_provider/shared_prefs_provider.dart';
+export 'supabase_provider/sales_realtime_provider.dart';
 export 'supabase_provider/supabase_provider.dart';
 export 'theme_provider/theme_provider.dart';

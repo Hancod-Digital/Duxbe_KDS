@@ -1,7 +1,7 @@
 import 'package:duxbe_kds/features/auth/auth.dart';
-import 'package:duxbe_kds/features/home/domain/models/kds_sale/kds_sale_model.dart';
-import 'package:duxbe_kds/features/home/domain/models/status_model/status_model.dart';
-import 'package:duxbe_kds/features/home/domain/repositories/interfaces/home_interfaces.dart';
+import 'package:duxbe_kds/features/home/domain/models/minimal_sale/minimal_sale_model.dart';
+import 'package:duxbe_kds/features/sales/domain/models/sale_view_model.dart';
+import 'package:duxbe_kds/features/sales/domain/repositories/interfaces/i_sale_repository.dart';
 import 'package:duxbe_kds/shared/constants/db_constants.dart';
 import 'package:duxbe_kds/shared/models/app_filter.dart';
 import 'package:duxbe_kds/shared/models/paginated_response.dart';
@@ -9,26 +9,26 @@ import 'package:duxbe_kds/shared/shared.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final homeRepoProvider = Provider<IHomeRepository>((ref) {
-  return HomeRepository(ref);
+final saleRepoProvider = Provider<ISaleRepository>((ref) {
+  return SaleRepository(ref);
 });
 
-class HomeRepository implements IHomeRepository {
-  HomeRepository(this.ref) : _supabaseClient = ref.watch(supabaseProvider);
+class SaleRepository implements ISaleRepository {
+  SaleRepository(this.ref) : _supabaseClient = ref.watch(supabaseProvider);
 
   final Ref ref;
   final SupabaseClient _supabaseClient;
 
   @override
-  Future<List<Status>> getSaleStatuses() async {
+  Future<SaleView?> getSaleWithId({required String saleId}) async {
     try {
-      final businessId = ref.read(selectedBusinessProvider)!.businessId;
       final response = await _supabaseClient
-          .from(DbConstants.statuses)
+          .from(DbConstants.saleView)
           .select()
-          .eq('type', 'sale')
-          .eq('business_id', businessId);
-      return response.map(Status.fromJson).toList();
+          .eq('sale_id', saleId)
+          .maybeSingle();
+      if (response == null) return null;
+      return MinimalSale.fromJson(response);
     } on PostgrestException catch (e) {
       throw AppException(
         e.message,
@@ -39,13 +39,32 @@ class HomeRepository implements IHomeRepository {
   }
 
   @override
-  Future<PaginatedResponse<KdsSale>> getSalesMinimal({
+  Future<MinimalSale?> getSalesMinimalById({required String saleId}) async {
+    try {
+      final response = await _supabaseClient
+          .from(DbConstants.minimalSaleView)
+          .select()
+          .eq('sale_id', saleId)
+          .maybeSingle();
+      if (response == null) return null;
+      return MinimalSale.fromJson(response);
+    } on PostgrestException catch (e) {
+      throw AppException(
+        e.message,
+        code: e.code,
+        details: e.details?.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<PaginatedResponse<MinimalSale>> getSalesMinimal({
     required int pageSize,
     required int pageNumber,
     AppFilter filters = const {},
     String query = '',
-    String? statusId,
-    String? statusName,
+    String? status,
+    bool? orderMode,
     DateTime? fromDate,
     DateTime? toDate,
   }) async {
@@ -55,7 +74,7 @@ class HomeRepository implements IHomeRepository {
 
       final offset = (pageNumber - 1) * pageSize;
       var queryBuilder = _supabaseClient
-          .from(DbConstants.kdsView)
+          .from(DbConstants.minimalSaleView)
           .select()
           .eq('business_id', businessId);
 
@@ -65,18 +84,11 @@ class HomeRepository implements IHomeRepository {
         );
       }
 
-      final normalizedStatusId = statusId?.trim();
-      final normalizedStatusName = statusName?.trim();
-      if (normalizedStatusId != null && normalizedStatusId.isNotEmpty) {
-        if (normalizedStatusName != null &&
-            normalizedStatusName.isNotEmpty &&
-            normalizedStatusName != normalizedStatusId) {
-          queryBuilder = queryBuilder.or(
-            'status.eq.$normalizedStatusId,status.eq.$normalizedStatusName',
-          );
-        } else {
-          queryBuilder = queryBuilder.eq('status', normalizedStatusId);
-        }
+      if (status != null && status.trim().isNotEmpty) {
+        queryBuilder = queryBuilder.eq('status', status);
+      }
+      if (orderMode != null) {
+        queryBuilder = queryBuilder.eq('order_mode', orderMode);
       }
       if (fromDate != null) {
         queryBuilder = queryBuilder.gte(
@@ -202,25 +214,9 @@ class HomeRepository implements IHomeRepository {
           .order('sale_date', ascending: false)
           .count(CountOption.exact);
       return PaginatedResponse(
-        data: response.data.map(KdsSale.fromJson).toList(),
+        data: response.data.map(MinimalSale.fromJson).toList(),
         count: response.count,
       );
-    } on PostgrestException catch (e) {
-      throw AppException(
-        e.message,
-        code: e.code,
-        details: e.details?.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> updateSaleStatus(String saleId, String statusId) async {
-    try {
-      await _supabaseClient
-          .from(DbConstants.sales)
-          .update({'status_id': statusId})
-          .eq('sale_id', saleId);
     } on PostgrestException catch (e) {
       throw AppException(
         e.message,

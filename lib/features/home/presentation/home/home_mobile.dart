@@ -44,99 +44,83 @@ class _HomeScreenMobileState extends ConsumerState<HomeScreenMobile> {
         context.l10n.noBusinessesAvailable;
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff0B1220), Color(0xff152238)],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Assets.icons.duxbeWhiteLogo.svg(height: 36),
-                    const SizedBox(width: 10),
-                    Assets.icons.duxbeWhiteText.svg(height: 20),
+      backgroundColor: AppColors.greyBorder,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: .06),
+                      blurRadius: 18,
+                      offset: const Offset(0, 8),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 28),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: BusinessSwitcher(width: 260),
-                ),
-                const SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: AppButton(
-                    width: 120,
-                    style: ButtonStyles.primary,
-                    color: AppColors.brandViolet,
-                    label: Text(context.l10n.logout),
-                    onPress: _handleLogout,
-                    isLoading: ref
-                        .watch(asyncActionProvider(actionName: 'sign_out'))
-                        .isLoading,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Container(
-                  padding: const EdgeInsets.all(22),
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: .08),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: AppColors.white.withValues(alpha: .12),
+                child: Row(
+                  children: [
+                    Assets.images.duxbeLogo.image(height: 26),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            currentBusinessName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppText.smallN.copyWith(
+                              color: AppColors.greyText,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            displayName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppText.smallN.copyWith(
+                              color: AppColors.greyText,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.l10n.welcomeBack,
-                        style: AppText.b32.copyWith(color: AppColors.white),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        context.l10n.dashboard,
-                        style: AppText.mediumN.copyWith(
-                          color: AppColors.white.withValues(alpha: .78),
+                    const SizedBox(width: 12),
+
+                    AppButton(
+                      width: 92,
+                      height: 40,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      style: ButtonStyles.secondary,
+                      color: AppColors.brandViolet,
+                      borderRadius: BorderRadius.circular(14),
+                      label: Text(
+                        context.l10n.logout,
+                        style: AppText.mediumSB.copyWith(
+                          color: AppColors.brandViolet,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Signed in as',
-                        style: AppText.mediumN.copyWith(
-                          color: AppColors.white.withValues(alpha: .68),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        displayName,
-                        style: AppText.sb20.copyWith(color: AppColors.white),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'You are working in $currentBusinessName.',
-                        style: AppText.largeN.copyWith(
-                          color: AppColors.white.withValues(alpha: .76),
-                        ),
-                      ),
-                    ],
-                  ),
+                      onPress: _handleLogout,
+                      isLoading: ref
+                          .watch(asyncActionProvider(actionName: 'sign_out'))
+                          .isLoading,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 18),
-                const SizedBox(
-                  height: 760,
-                  child: HomeOrdersBoard(),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 12),
+              BusinessSwitcher(width: 200, isLightTheme: true),
+              const SizedBox(height: 12),
+              const Expanded(child: HomeOrdersBoard()),
+            ],
           ),
         ),
       ),

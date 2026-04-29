@@ -44,6 +44,7 @@ class DbConstants {
   static const String minimalPurchaseView = 'minimal_purchase_view';
   static const String saleView = 'sale_view';
   static const String minimalSaleView = 'minimal_sale_view';
+  static const String kdsView = 'kds_view';
   static const String employeeView = 'employee_view';
   static const String vwItems = 'vw_items';
   static const String vwStockAdjustments = 'vw_stock_adjustments';

@@ -5,52 +5,37 @@ enum HomeStatus { initial, loading, success, error }
 class HomeState {
   const HomeState({
     this.status = HomeStatus.initial,
-    this.orders = const [],
+    this.statuses = const [],
     this.selectedBusinessId,
     this.searchQuery = '',
+    this.ordersRevision = 0,
     this.error = '',
   });
 
   factory HomeState.initial() => const HomeState();
 
   final HomeStatus status;
-  final List<KitchenOrderItem> orders;
+  final List<Status> statuses;
   final String? selectedBusinessId;
   final String searchQuery;
+  final int ordersRevision;
   final String error;
 
   HomeState copyWith({
     HomeStatus? status,
-    List<KitchenOrderItem>? orders,
+    List<Status>? statuses,
     String? selectedBusinessId,
     String? searchQuery,
+    int? ordersRevision,
     String? error,
   }) {
     return HomeState(
       status: status ?? this.status,
-      orders: orders ?? this.orders,
+      statuses: statuses ?? this.statuses,
       selectedBusinessId: selectedBusinessId ?? this.selectedBusinessId,
       searchQuery: searchQuery ?? this.searchQuery,
+      ordersRevision: ordersRevision ?? this.ordersRevision,
       error: error ?? this.error,
     );
-  }
-
-  List<KitchenOrderItem> get filteredOrders {
-    final query = searchQuery.trim().toLowerCase();
-    if (query.isEmpty) return orders;
-
-    return orders.where((order) {
-      return order.orderNo.toLowerCase().contains(query) ||
-          order.customerName.toLowerCase().contains(query) ||
-          order.tableLabel.toLowerCase().contains(query) ||
-          order.items.any((item) => item.toLowerCase().contains(query));
-    }).toList();
-  }
-
-  Map<KitchenOrderStatus, List<KitchenOrderItem>> get groupedOrders {
-    return {
-      for (final status in KitchenOrderStatus.values)
-        status: filteredOrders.where((order) => order.status == status).toList(),
-    };
   }
 }
