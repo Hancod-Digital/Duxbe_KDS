@@ -5,6 +5,7 @@ import 'package:duxbe_kds/bootstrap.dart';
 import 'package:duxbe_kds/env.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:scaled_app/scaled_app.dart';
 // import 'package:scaled_app/scaled_app.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -13,13 +14,9 @@ Future<void> main() async {
   tz.initializeTimeZones();
 
   // for scaling purposes, if required use the below code
-  // ScaledWidgetsFlutterBinding.ensureInitialized(
-  //   scaleFactor: (deviceSize) {
-  //     const widthOfDesign = 375;
-  //     return deviceSize.width / widthOfDesign;
-  //   },
-  // );
-
+  ScaledWidgetsFlutterBinding.ensureInitialized(
+    scaleFactor: (deviceSize) => 1.0,
+  );
   // In case ScaledWidgetsFlutterBinding is not used
   WidgetsFlutterBinding.ensureInitialized();
 

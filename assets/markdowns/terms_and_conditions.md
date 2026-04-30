@@ -2,7 +2,7 @@
 
 **Last Updated: April 8, 2025**
 
-By downloading and using the Duxbe Business app ("the App"), you agree to comply
+By downloading and using the Duxbe KDS app ("the App"), you agree to comply
 with and be bound by these Terms and Conditions. Please read them carefully
 before using the App.
 

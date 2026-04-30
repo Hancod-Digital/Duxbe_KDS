@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "141463328504",
+    "project_id": "duxbe-application",
+    "storage_bucket": "duxbe-application.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141463328504:android:e13f98297db82e29c68d0d",
+        "android_client_info": {
+          "package_name": "com.duxbe.kds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "141463328504-at2cjaid4b59nppeanj47gb5t4a5h7rm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARYt2QECXvZRVyT5mPHT7LZMwcnNJl_B0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "141463328504-at2cjaid4b59nppeanj47gb5t4a5h7rm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "141463328504-b5jph2emd0hnm1oikfend8imb2prie43.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.duxbe.kds"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141463328504:android:828ee3ab12dedb7cc68d0d",
+        "android_client_info": {
+          "package_name": "com.hancod.duxbe.business"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "141463328504-eses46tgs6nips9qfbjpini2f2h5c4vg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hancod.duxbe.business",
+            "certificate_hash": "efab2dfaac1f98e50578923614a1048dc09b9f6d"
+          }
+        },
+        {
+          "client_id": "141463328504-lj6ehrvaj53q6kdlmt17t1us38o5kc7r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hancod.duxbe.business",
+            "certificate_hash": "d8d669f5633b41708426251c1318886663f50250"
+          }
+        },
+        {
+          "client_id": "141463328504-sugvejvs3unrota58j77cbh6gfioskon.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hancod.duxbe.business",
+            "certificate_hash": "b104990354107d25c915606f5a904547d2f35ec8"
+          }
+        },
+        {
+          "client_id": "141463328504-at2cjaid4b59nppeanj47gb5t4a5h7rm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARYt2QECXvZRVyT5mPHT7LZMwcnNJl_B0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "141463328504-at2cjaid4b59nppeanj47gb5t4a5h7rm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "141463328504-b5jph2emd0hnm1oikfend8imb2prie43.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.duxbe.kds"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

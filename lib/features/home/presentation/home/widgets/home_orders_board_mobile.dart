@@ -204,10 +204,7 @@ class _HomeOrdersBoardMobileState extends ConsumerState<HomeOrdersBoardMobile> {
                     newPageProgressIndicatorBuilder: (context) {
                       return const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 2),
-                        child: LaneContentShimmer(
-                          isMobile: true,
-                          itemCount: 2,
-                        ),
+                        child: LaneContentShimmer(isMobile: true, itemCount: 2),
                       );
                     },
                     noItemsFoundIndicatorBuilder: (context) {
@@ -564,8 +561,11 @@ class _MobileOrderCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Wrap(
-                spacing: 6,
-                runSpacing: 6,
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   for (final item in order.items.take(4))
                     _OrderChip(label: item.displayLabel),
@@ -589,15 +589,24 @@ class _OrderChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.greyBorder.withValues(alpha: .38),
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.greyBorder.withValues(alpha: .95)),
+        border: Border.all(color: AppColors.greyBorder.withValues(alpha: .85)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Text(
         label,
-        style: AppText.xSmallN.copyWith(color: AppColors.greyText),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppText.smallSB.copyWith(color: AppColors.greyText),
       ),
     );
   }
@@ -855,6 +864,27 @@ class _DetailPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _DetailInfoCard(order: order, status: status),
+        const SizedBox(height: 12),
+        _ItemsCard(items: order.items, borderColor: status.color),
+        const SizedBox(height: 12),
+        _KotHistoryCard(history: order.itemHistory, borderColor: status.color),
+      ],
+    );
+  }
+}
+
+class _DetailInfoCard extends StatelessWidget {
+  const _DetailInfoCard({required this.order, required this.status});
+
+  final KdsSale order;
+  final Status status;
+
+  @override
+  Widget build(BuildContext context) {
     final rows = <_DetailRowData>[
       _DetailRowData(
         label: 'Date & time',
@@ -866,27 +896,12 @@ class _DetailPanel extends StatelessWidget {
             ? order.orderType!.trim()
             : order.tableLabel,
       ),
-      _DetailRowData(
-        label: 'Items',
-        value: order.items.isEmpty
-            ? 'No items available'
-            : order.items.map((item) => item.displayLabel).join('\n'),
-        multiLine: true,
-      ),
-      _DetailRowData(
-        label: 'Status',
-        value: status.label,
-        trailing: _StatusPill(status: status),
-      ),
+      _DetailRowData(label: 'Status', value: status.label),
       _DetailRowData(label: 'Customer', value: order.customerNameLabel),
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: status.color),
-      ),
+    return _DetailSectionCard(
+      borderColor: status.color,
       child: Column(
         children: [
           for (var index = 0; index < rows.length; index++) ...[
@@ -907,18 +922,222 @@ class _DetailPanel extends StatelessWidget {
   }
 }
 
+class _ItemsCard extends StatelessWidget {
+  const _ItemsCard({required this.items, required this.borderColor});
+
+  final List<KdsOrderItem> items;
+  final Color borderColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DetailSectionCard(
+      borderColor: borderColor,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Items',
+              style: AppText.mediumSB.copyWith(color: AppColors.black),
+            ),
+            const SizedBox(height: 12),
+            if (items.isEmpty)
+              Text(
+                'No items available',
+                style: AppText.smallN.copyWith(color: AppColors.greyText),
+              )
+            else
+              Column(
+                children: [
+                  for (var index = 0; index < items.length; index++) ...[
+                    _OrderItemTile(item: items[index]),
+                    if (index != items.length - 1)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: AppColors.greyBorder.withValues(alpha: .55),
+                        ),
+                      ),
+                  ],
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _KotHistoryCard extends StatelessWidget {
+  const _KotHistoryCard({required this.history, required this.borderColor});
+
+  final List<KdsOrderHistoryEntry> history;
+  final Color borderColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DetailSectionCard(
+      borderColor: borderColor,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'KOT History',
+              style: AppText.mediumSB.copyWith(color: AppColors.black),
+            ),
+            const SizedBox(height: 12),
+            if (history.isEmpty)
+              Text(
+                'No KOT history available',
+                style: AppText.smallN.copyWith(color: AppColors.greyText),
+              )
+            else
+              Column(
+                children: [
+                  for (var index = 0; index < history.length; index++) ...[
+                    _KotHistoryEntryTile(entry: history[index], index: index),
+                    if (index != history.length - 1)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: AppColors.greyBorder.withValues(alpha: .55),
+                        ),
+                      ),
+                  ],
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailSectionCard extends StatelessWidget {
+  const _DetailSectionCard({required this.borderColor, required this.child});
+
+  final Color borderColor;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: borderColor),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _OrderItemTile extends StatelessWidget {
+  const _OrderItemTile({required this.item});
+
+  final KdsOrderItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final note = item.note?.trim() ?? '';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            // for (final item in entry.items)
+            _OrderChip(label: item.displayLabel),
+          ],
+        ),
+
+        if (note.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.only(left: 40),
+            child: Text(
+              'Note: $note',
+              style: AppText.smallN.copyWith(
+                color: AppColors.greyText.withValues(alpha: .92),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _KotHistoryEntryTile extends StatelessWidget {
+  const _KotHistoryEntryTile({required this.entry, required this.index});
+
+  final KdsOrderHistoryEntry entry;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final timeLabel = entry.orderTime == null
+        ? 'KOT ${index + 1}'
+        : DateFormat('MMM d, yyyy • h:mm a').format(entry.orderTime!);
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.greyBorder.withValues(alpha: .16),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  timeLabel,
+                  style: AppText.smallSB.copyWith(color: AppColors.black),
+                ),
+              ),
+              Text(
+                '${entry.items.length} item${entry.items.length == 1 ? '' : 's'}',
+                style: AppText.xSmallN.copyWith(color: AppColors.greyText),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          if (entry.items.isEmpty)
+            Text(
+              'No items available',
+              style: AppText.smallN.copyWith(color: AppColors.greyText),
+            )
+          else
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final item in entry.items)
+                  _OrderChip(label: item.displayLabel),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _DetailRowData {
-  const _DetailRowData({
-    required this.label,
-    required this.value,
-    this.trailing,
-    this.multiLine = false,
-  });
+  const _DetailRowData({required this.label, required this.value});
 
   final String label;
   final String value;
-  final Widget? trailing;
-  final bool multiLine;
 }
 
 class _DetailRow extends StatelessWidget {
@@ -931,9 +1150,7 @@ class _DetailRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
-        crossAxisAlignment: data.multiLine
-            ? CrossAxisAlignment.start
-            : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: 104,
@@ -950,32 +1167,7 @@ class _DetailRow extends StatelessWidget {
               style: AppText.mediumSB.copyWith(color: AppColors.black),
             ),
           ),
-          // if (data.trailing != null) ...[
-          //   const SizedBox(width: 10),
-          //   data.trailing!,
-          // ],
         ],
-      ),
-    );
-  }
-}
-
-class _StatusPill extends StatelessWidget {
-  const _StatusPill({required this.status});
-
-  final Status status;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: status.color.withValues(alpha: .16),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        status.label,
-        style: AppText.xSmallSB.copyWith(color: status.color),
       ),
     );
   }

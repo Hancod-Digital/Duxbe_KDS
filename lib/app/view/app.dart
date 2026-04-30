@@ -5,6 +5,7 @@ import 'package:duxbe_kds/shared/providers/locale_provider/locale_provider.dart'
 import 'package:duxbe_kds/shared/providers/router_provider/router_provider.dart';
 import 'package:duxbe_kds/shared/providers/shared_prefs_provider/shared_prefs_provider.dart';
 import 'package:duxbe_kds/shared/providers/theme_provider/theme_provider.dart';
+import 'package:duxbe_kds/shared/utils/rotation_overlay.dart';
 import 'package:duxbe_kds/shared/widgets/no_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,11 +45,14 @@ class App extends ConsumerWidget {
         scrollBehavior: const CustomScrollBehavior(),
         builder: (context, child) {
           // You can wrap Internet connection alert here
-          return NoInternetAlert(
+          return RotationOverlay(
             navigatorKey: appRouter.router.routerDelegate.navigatorKey,
-            child: UpgradeAlert(
+            child: NoInternetAlert(
               navigatorKey: appRouter.router.routerDelegate.navigatorKey,
-              child: child,
+              child: UpgradeAlert(
+                navigatorKey: appRouter.router.routerDelegate.navigatorKey,
+                child: child,
+              ),
             ),
           );
         },

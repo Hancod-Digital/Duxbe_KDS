@@ -44,9 +44,17 @@ sealed class KdsSale with _$KdsSale {
     )
     @Default(<KdsOrderHistoryEntry>[])
     List<KdsOrderHistoryEntry> itemHistory,
+    @JsonKey(
+      name: 'sale_items_list',
+      fromJson: _kdsItemsFromJson,
+      toJson: _kdsItemsToJson,
+    )
+    @Default(<KdsOrderItem>[])
+    List<KdsOrderItem> saleItemsList,
   }) = _KdsSale;
 
-  factory KdsSale.fromJson(Map<String, dynamic> json) => _$KdsSaleFromJson(json);
+  factory KdsSale.fromJson(Map<String, dynamic> json) =>
+      _$KdsSaleFromJson(json);
 }
 
 @freezed
@@ -54,7 +62,11 @@ sealed class KdsOrderHistoryEntry with _$KdsOrderHistoryEntry {
   const factory KdsOrderHistoryEntry({
     @JsonKey(name: 'order_time', fromJson: _nullableDateTimeFromJson)
     DateTime? orderTime,
-    @JsonKey(name: 'items', fromJson: _kdsItemsFromJson, toJson: _kdsItemsToJson)
+    @JsonKey(
+      name: 'items',
+      fromJson: _kdsItemsFromJson,
+      toJson: _kdsItemsToJson,
+    )
     @Default(<KdsOrderItem>[])
     List<KdsOrderItem> items,
   }) = _KdsOrderHistoryEntry;
@@ -66,7 +78,9 @@ sealed class KdsOrderHistoryEntry with _$KdsOrderHistoryEntry {
 @freezed
 sealed class KdsOrderItem with _$KdsOrderItem {
   const factory KdsOrderItem({
-    @JsonKey(name: 'item_id', fromJson: _stringFromJson) @Default('') String itemId,
+    @JsonKey(name: 'item_id', fromJson: _stringFromJson)
+    @Default('')
+    String itemId,
     @JsonKey(name: 'quantity', fromJson: _intFromJson) @Default(0) int quantity,
     @JsonKey(name: 'item_name', fromJson: _stringFromJson)
     @Default('Item')
@@ -97,17 +111,23 @@ extension KdsSalePresentationX on KdsSale {
   String get orderNo => saleInvoice.trim().isEmpty ? saleId : saleInvoice;
 
   String get customerNameLabel => _firstNonEmpty([
-        customerName,
-        orderedBy,
-        customerPhone,
-      ], fallback: 'Guest');
+    customerName,
+    orderedBy,
+    customerPhone,
+  ], fallback: 'Guest');
 
   String get tableLabel =>
       _firstNonEmpty([tableName, orderType, platform], fallback: 'Order');
 
   DateTime get placedAt => saleDate;
 
-  List<KdsOrderItem> get items =>
+  List<KdsOrderItem> get saleItems => saleItemsList.isNotEmpty
+      ? saleItemsList
+      : itemHistory.expand((entry) => entry.items).toList(growable: false);
+
+  List<KdsOrderItem> get items => saleItems;
+
+  List<KdsOrderItem> get kotHistoryItems =>
       itemHistory.expand((entry) => entry.items).toList(growable: false);
 
   List<String> get itemLines {
@@ -115,14 +135,16 @@ extension KdsSalePresentationX on KdsSale {
       return const ['No items available'];
     }
 
-    return items.map((item) {
-      final label = item.displayLabel;
-      final note = item.note?.trim();
-      if (note == null || note.isEmpty) {
-        return label;
-      }
-      return '$label\n$note';
-    }).toList(growable: false);
+    return items
+        .map((item) {
+          final label = item.displayLabel;
+          final note = item.note?.trim();
+          if (note == null || note.isEmpty) {
+            return label;
+          }
+          return '$label\n$note';
+        })
+        .toList(growable: false);
   }
 
   String get searchableText {
@@ -134,6 +156,8 @@ extension KdsSalePresentationX on KdsSale {
       platform?.trim() ?? '',
       orderedBy?.trim() ?? '',
       for (final item in items) item.searchableText,
+      for (final historyEntry in itemHistory)
+        for (final item in historyEntry.items) item.searchableText,
     ];
     return values.where((value) => value.trim().isNotEmpty).join(' ');
   }
@@ -162,7 +186,8 @@ extension KdsOrderItemPresentationX on KdsOrderItem {
   }
 }
 
-dynamic _itemHistoryFromJson(dynamic value) => _kdsHistoryEntriesFromJson(value);
+dynamic _itemHistoryFromJson(dynamic value) =>
+    _kdsHistoryEntriesFromJson(value);
 
 dynamic _itemHistoryToJson(List<KdsOrderHistoryEntry> value) =>
     _kdsHistoryEntriesToJson(value);
@@ -202,8 +227,7 @@ List<KdsOrderHistoryEntry> _kdsHistoryEntriesFromJson(dynamic value) {
 
 List<Map<String, dynamic>> _kdsHistoryEntriesToJson(
   List<KdsOrderHistoryEntry> value,
-) =>
-    value.map((entry) => entry.toJson()).toList(growable: false);
+) => value.map((entry) => entry.toJson()).toList(growable: false);
 
 List<KdsOrderItem> _kdsItemsFromJson(dynamic value) {
   if (value == null) {
@@ -213,7 +237,10 @@ List<KdsOrderItem> _kdsItemsFromJson(dynamic value) {
   if (value is List) {
     return value
         .whereType<Map>()
-        .map((rawItem) => KdsOrderItem.fromJson(Map<String, dynamic>.from(rawItem)))
+        .map(
+          (rawItem) =>
+              KdsOrderItem.fromJson(Map<String, dynamic>.from(rawItem)),
+        )
         .toList(growable: false);
   }
 

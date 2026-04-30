@@ -130,53 +130,53 @@ class _LoginScreenMobileState extends ConsumerState<LoginScreenMobile> {
                           onPress: () => _handleLogin(context, ref),
                         ),
                         const SizedBox(height: 20),
-                        Stack(
-                          children: [
-                            const Divider(
-                              color: AppColors.brandViolet,
-                              thickness: 1,
-                            ),
-                            Center(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                    alignment: Alignment.center,
-                                    color: AppColors.white,
-                                    child: Text(
-                                      'Or continue with',
-                                      style: AppText.mediumM.copyWith(
-                                        color: AppColors.stormyBlue,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 16,
-                          children: [
-                            _socialButton(
-                              icon: Assets.icons.google.svg(),
-                              onTap: () {
-                                widget.onGoogle?.call();
-                              },
-                            ),
-                            _socialButton(
-                              icon: Assets.icons.apple.svg(),
-                              onTap: () {
-                                widget.onApple?.call();
-                              },
-                            ),
-                          ],
-                        ),
+                        // Stack(
+                        //   children: [
+                        //     const Divider(
+                        //       color: AppColors.brandViolet,
+                        //       thickness: 1,
+                        //     ),
+                        //     Center(
+                        //       child: Row(
+                        //         mainAxisSize: MainAxisSize.min,
+                        //         children: [
+                        //           Container(
+                        //             padding: const EdgeInsets.symmetric(
+                        //               horizontal: 16,
+                        //             ),
+                        //             alignment: Alignment.center,
+                        //             color: AppColors.white,
+                        //             child: Text(
+                        //               'Or continue with',
+                        //               style: AppText.mediumM.copyWith(
+                        //                 color: AppColors.stormyBlue,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // const SizedBox(height: 20),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   spacing: 16,
+                        //   children: [
+                        //     _socialButton(
+                        //       icon: Assets.icons.google.svg(),
+                        //       onTap: () {
+                        //         widget.onGoogle?.call();
+                        //       },
+                        //     ),
+                        //     _socialButton(
+                        //       icon: Assets.icons.apple.svg(),
+                        //       onTap: () {
+                        //         widget.onApple?.call();
+                        //       },
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

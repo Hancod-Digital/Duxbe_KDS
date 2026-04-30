@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>648584474232-tsl4t7qjg8glpon82v7hdhb89r2aiasb.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.648584474232-tsl4t7qjg8glpon82v7hdhb89r2aiasb</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>648584474232-fk9eanssjdm5727dvqp6i910n22dqt53.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBZ6OYhiqHPonNxLtxkO_OuAeJ2gOgJ_IU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>648584474232</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.duxbe.kds.dev</string>
+	<key>PROJECT_ID</key>
+	<string>han-pos-demo</string>
+	<key>STORAGE_BUCKET</key>
+	<string>han-pos-demo.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:648584474232:ios:0051fae25ac986b88d078d</string>
+	<key>DATABASE_URL</key>
+	<string>https://han-pos-demo-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>

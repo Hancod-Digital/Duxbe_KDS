@@ -32,7 +32,7 @@ For the purposes of this Privacy Policy:
   the shares, equity interest or other securities entitled to vote for election
   of directors or other managing authority.
 
-- **Application** refers to Duxbe Business, the software program provided by the
+- **Application** refers to Duxbe KDS, the software program provided by the
   Company.
 
 - **Company** (referred to as either "the Company", "We", "Us" or "Our" in this

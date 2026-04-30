@@ -1,11 +1,202 @@
 {
   "version": "0.2.0",
   "configurations": [
+    // === Supabase Functions ===
     {
-      "name": "Development Mobile",
+      "name": "Attach V8 Inspector",
+      "type": "node",
+      "address": "127.0.0.1",
+      "request": "attach",
+      "localRoot": "${workspaceFolder}/supabase/functions/",
+      "remoteRoot": "/home/deno/functions/",
+      "sourceMaps": true,
+      "enableContentValidation": false,
+      "restart": true,
+      "timeout": 1000000,
+      "port": 8083
+    },
+
+    // === Development ===
+    {
+      "name": "Development - Web",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main_development.dart"
+      "program": "lib/main_development.dart",
+      "args": [
+        "-d",
+        "web-server",
+        "--target",
+        "lib/main_development.dart",
+        "--web-port",
+        "5001",
+        "--web-experimental-hot-reload",
+        "--dart-define-from-file=env/env.dev.json"
+      ]
+    },
+    {
+      "name": "Development - Mobile",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_development.dart",
+      "args": [
+        "--target",
+        "lib/main_development.dart",
+        "--flavor",
+        "development",
+        "--dart-define-from-file=env/env.dev.json"
+      ]
+    },
+    {
+      "name": "Development - Mobile Release",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_development.dart",
+      "args": [
+        "--release",
+        "--target",
+        "lib/main_development.dart",
+        "--flavor",
+        "development",
+        "--dart-define-from-file=env/env.dev.json"
+      ]
+    },
+
+    // === Staging ===
+    {
+      "name": "Staging - Web",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_staging.dart",
+      "args": [
+        "-d",
+        "web-server",
+        "--target",
+        "lib/main_staging.dart",
+        "--web-renderer",
+        "canvaskit",
+        "--web-port",
+        "5001",
+        "--web-experimental-hot-reload",
+        "--dart-define-from-file=env/env.staging.json"
+      ]
+    },
+    {
+      "name": "Staging - Mobile",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_staging.dart",
+      "args": [
+        "--target",
+        "lib/main_staging.dart",
+        "--flavor",
+        "staging",
+        "--dart-define-from-file=env/env.staging.json"
+      ]
+    },
+    {
+      "name": "Staging - Mobile Release",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_staging.dart",
+      "args": [
+        "--release",
+        "--target",
+        "lib/main_staging.dart",
+        "--flavor",
+        "staging",
+        "--dart-define-from-file=env/env.staging.json"
+      ]
+    },
+
+    // === Production ===
+    {
+      "name": "Production - Web",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_production.dart",
+      "args": [
+        "-d",
+        "web-server",
+        "--target",
+        "lib/main_production.dart",
+        "--web-port",
+        "5001",
+        "--web-experimental-hot-reload",
+        "--dart-define-from-file=env/env.prod.json"
+      ]
+    },
+    {
+      "name": "Production - Mobile",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_production.dart",
+      "args": [
+        "--target",
+        "lib/main_production.dart",
+        "--flavor",
+        "production",
+        "--dart-define-from-file=env/env.prod.json",
+        "--verbose"
+      ]
+    },
+    {
+      "name": "Production - Mobile Release",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_production.dart",
+      "args": [
+        "--release",
+        "--target",
+        "lib/main_production.dart",
+        "--flavor",
+        "production",
+        "--dart-define-from-file=env/env.prod.json"
+      ]
+    },
+
+    // === Local ===
+    {
+      "name": "Local - Web",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_local.dart",
+      "args": [
+        "-d",
+        "web-server",
+        "--target",
+        "lib/main_local.dart",
+        "--web-port",
+        "5001",
+        "--web-experimental-hot-reload",
+        "--dart-define-from-file=env/env.local.json"
+      ]
+    },
+    {
+      "name": "Local - Mobile",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_local.dart",
+      "args": [
+        "--target",
+        "lib/main_local.dart",
+        "--flavor",
+        "development",
+        "--dart-define-from-file=env/env.local.json"
+      ]
+    },
+    {
+      "name": "Local - Mobile Release",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_local.dart",
+      "args": [
+        "--release",
+        "--target",
+        "lib/main_local.dart",
+        "--flavor",
+        "development",
+        "--dart-define-from-file=env/env.local.json"
+      ]
     }
   ]
 }

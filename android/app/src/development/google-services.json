@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "648584474232",
+    "firebase_url": "https://han-pos-demo-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "han-pos-demo",
+    "storage_bucket": "han-pos-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648584474232:android:e3d95580fee2ec478d078d",
+        "android_client_info": {
+          "package_name": "com.duxbe.connect.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648584474232-qbnblh67brimcibgr22u9kras0hl0ji5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwzNca6BjZXJcBOsT91z9M4uCypJCHsCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648584474232-qbnblh67brimcibgr22u9kras0hl0ji5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "648584474232-akutg57vpe5i6ul91ck780h836u5hbhe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.duxbe.business.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648584474232:android:9ab228ddf3e9c9228d078d",
+        "android_client_info": {
+          "package_name": "com.duxbe.kds.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648584474232-qbnblh67brimcibgr22u9kras0hl0ji5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwzNca6BjZXJcBOsT91z9M4uCypJCHsCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648584474232-qbnblh67brimcibgr22u9kras0hl0ji5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "648584474232-akutg57vpe5i6ul91ck780h836u5hbhe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.duxbe.business.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648584474232:android:ccee636d9e174e758d078d",
+        "android_client_info": {
+          "package_name": "com.hancod.duxbe.business.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648584474232-fk9eanssjdm5727dvqp6i910n22dqt53.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hancod.duxbe.business.dev",
+            "certificate_hash": "efab2dfaac1f98e50578923614a1048dc09b9f6d"
+          }
+        },
+        {
+          "client_id": "648584474232-v9ki371sgkl93paipqignjhiju9pjc6v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hancod.duxbe.business.dev",
+            "certificate_hash": "d8d669f5633b41708426251c1318886663f50250"
+          }
+        },
+        {
+          "client_id": "648584474232-qbnblh67brimcibgr22u9kras0hl0ji5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwzNca6BjZXJcBOsT91z9M4uCypJCHsCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648584474232-qbnblh67brimcibgr22u9kras0hl0ji5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "648584474232-akutg57vpe5i6ul91ck780h836u5hbhe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.duxbe.business.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -26,6 +26,9 @@ _KdsSale _$KdsSaleFromJson(Map<String, dynamic> json) => _KdsSale(
   itemHistory: json['item_history'] == null
       ? const <KdsOrderHistoryEntry>[]
       : _itemHistoryFromJson(json['item_history']),
+  saleItemsList: json['sale_items_list'] == null
+      ? const <KdsOrderItem>[]
+      : _kdsItemsFromJson(json['sale_items_list']),
 );
 
 Map<String, dynamic> _$KdsSaleToJson(_KdsSale instance) => <String, dynamic>{
@@ -44,6 +47,7 @@ Map<String, dynamic> _$KdsSaleToJson(_KdsSale instance) => <String, dynamic>{
   'platform': instance.platform,
   'ordered_by': instance.orderedBy,
   'item_history': _itemHistoryToJson(instance.itemHistory),
+  'sale_items_list': _kdsItemsToJson(instance.saleItemsList),
 };
 
 _KdsOrderHistoryEntry _$KdsOrderHistoryEntryFromJson(
@@ -73,7 +77,9 @@ _KdsOrderItem _$KdsOrderItemFromJson(Map<String, dynamic> json) =>
       itemType: _nullableStringFromJson(json['item_type']),
       unitPrice: _nullableDoubleFromJson(json['unit_price']),
       categoryId: _nullableStringFromJson(json['category_id']),
-      subservices: json['subservices'] as List<dynamic>? ?? const <dynamic>[],
+      subservices: json['subservices'] == null
+          ? const <dynamic>[]
+          : _subservicesFromJson(json['subservices']),
       categoryName: _nullableStringFromJson(json['category_name']),
     );
 
@@ -86,6 +92,6 @@ Map<String, dynamic> _$KdsOrderItemToJson(_KdsOrderItem instance) =>
       'item_type': instance.itemType,
       'unit_price': instance.unitPrice,
       'category_id': instance.categoryId,
-      'subservices': instance.subservices,
+      'subservices': _subservicesToJson(instance.subservices),
       'category_name': instance.categoryName,
     };

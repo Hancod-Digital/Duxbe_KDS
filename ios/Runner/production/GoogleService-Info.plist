@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>141463328504-b5jph2emd0hnm1oikfend8imb2prie43.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.141463328504-b5jph2emd0hnm1oikfend8imb2prie43</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>141463328504-eses46tgs6nips9qfbjpini2f2h5c4vg.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBN-rPOmmB_KPH545ZtKknZt2-t63xcCKY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>141463328504</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.duxbe.kds</string>
+	<key>PROJECT_ID</key>
+	<string>duxbe-application</string>
+	<key>STORAGE_BUCKET</key>
+	<string>duxbe-application.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:141463328504:ios:cec98ae15ffbe1a8c68d0d</string>
+</dict>
+</plist>

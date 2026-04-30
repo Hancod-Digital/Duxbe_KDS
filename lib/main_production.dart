@@ -13,10 +13,7 @@ Future<void> main() async {
 
   // for scaling purposes, if required use the below code
   ScaledWidgetsFlutterBinding.ensureInitialized(
-    scaleFactor: (deviceSize) {
-      const widthOfDesign = 375;
-      return deviceSize.width / widthOfDesign;
-    },
+    scaleFactor: (deviceSize) => 1.0,
   );
 
   // In case ScaledWidgetsFlutterBinding is not used

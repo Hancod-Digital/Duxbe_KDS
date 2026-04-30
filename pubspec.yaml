@@ -205,7 +205,7 @@ flutter_gen:
 msix_config:
   display_name: Duxbe
   publisher_display_name: Hancod Digital Pvt Lmt.
-  identity_name: com.duxbe.business
+  identity_name: com.duxbe.kds
   msix_version: 1.0.0.0
   logo_path: .\assets\images\duxbe_whitebg.png
   capabilities: internetClient, location, microphone, webcam

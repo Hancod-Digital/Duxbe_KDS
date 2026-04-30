@@ -59,7 +59,7 @@ final class HomeOrderLaneNotifierProvider
 }
 
 String _$homeOrderLaneNotifierHash() =>
-    r'6540a4f0549e71b16ba68e7ee394e95bd109f8f3';
+    r'ebf0480ae7d39b9cdfe6d37402fdcdc45f35f265';
 
 final class HomeOrderLaneNotifierFamily extends $Family
     with
