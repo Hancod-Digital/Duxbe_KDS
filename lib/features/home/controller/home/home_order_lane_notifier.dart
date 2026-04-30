@@ -1,7 +1,6 @@
 import 'package:duxbe_kds/features/home/controller/home/home_notifier.dart';
 import 'package:duxbe_kds/features/home/domain/models/home_models.dart';
 import 'package:duxbe_kds/features/home/domain/repositories/home_repositories.dart';
-import 'package:duxbe_kds/shared/providers/supabase_provider/sales_realtime_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,8 +15,6 @@ final homeOrderLaneCountProvider = FutureProvider.autoDispose
       if (homeState.selectedBusinessId == null) {
         return 0;
       }
-
-      ref.watch(salesRealtimeProvider);
 
       final response = await homeRepository.getSalesMinimal(
         pageSize: 1,
@@ -83,10 +80,6 @@ class HomeOrderLaneNotifier extends _$HomeOrderLaneNotifier {
         return response.data;
       },
     );
-    ref.listen(salesRealtimeProvider, (_, next) {
-      if (!ref.mounted || !next.hasValue) return;
-      state.pagingController.refresh();
-    });
     ref.onDispose(pagingController.dispose);
 
     return HomeOrderLaneState(pagingController: pagingController);

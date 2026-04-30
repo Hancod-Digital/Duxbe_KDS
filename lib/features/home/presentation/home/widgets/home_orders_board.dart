@@ -4,6 +4,7 @@ import 'package:duxbe_kds/features/home/controller/home/home_notifier.dart';
 import 'package:duxbe_kds/features/home/controller/home/home_state.dart';
 import 'package:duxbe_kds/features/home/domain/models/home_models.dart';
 import 'package:duxbe_kds/features/home/presentation/home/widgets/home_orders_board_mobile.dart';
+import 'package:duxbe_kds/features/home/presentation/home/widgets/home_sales_refresh.dart';
 import 'package:duxbe_kds/shared/shared.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +13,41 @@ import 'package:hancod_theme/hancod_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class HomeOrdersBoard extends ConsumerWidget {
+class HomeOrdersBoard extends ConsumerStatefulWidget {
   const HomeOrdersBoard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeOrdersBoard> createState() => _HomeOrdersBoardState();
+}
+
+class _HomeOrdersBoardState extends ConsumerState<HomeOrdersBoard> {
+  ProviderSubscription<AsyncValue<PostgresChangePayload>>?
+  _salesRealtimeSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _salesRealtimeSubscription = ref
+        .listenManual<AsyncValue<PostgresChangePayload>>(
+          salesRealtimeProvider,
+          (previous, next) {
+            final statuses = ref.read(homeProvider).statuses;
+            if (!next.hasValue || statuses.isEmpty) return;
+            refreshHomeSalesBoard(ref, statuses);
+          },
+        );
+  }
+
+  @override
+  void dispose() {
+    _salesRealtimeSubscription?.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final boardState = ref.watch(homeProvider);
     final statuses = boardState.statuses;
 
@@ -111,34 +141,66 @@ class HomeOrdersBoard extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 18),
-                ReactiveText<String>(
-                  formControlName: 'search_query',
-                  onChanged: (control) => ref
-                      .read(homeProvider.notifier)
-                      .setSearchQuery(control.value ?? ''),
-                  decoration: InputDecoration(
-                    hintText:
-                        'Search by customer, table, order number, or item',
-                    prefixIcon: const Icon(Icons.search),
-                    filled: true,
-                    fillColor: AppColors.white.withValues(alpha: .08),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: AppColors.brandViolet.withValues(alpha: .12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ReactiveText<String>(
+                        formControlName: 'search_query',
+                        onChanged: (control) => ref
+                            .read(homeProvider.notifier)
+                            .setSearchQuery(control.value ?? ''),
+                        decoration: InputDecoration(
+                          hintText:
+                              'Search by customer, table, order number, or item',
+                          prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          fillColor: AppColors.white.withValues(alpha: .08),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: AppColors.brandViolet.withValues(
+                                alpha: .12,
+                              ),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: AppColors.brandViolet.withValues(
+                                alpha: .12,
+                              ),
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                            borderSide: BorderSide(
+                              color: AppColors.brandViolet,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: AppColors.brandViolet.withValues(alpha: .12),
+                    const SizedBox(width: 10),
+                    Tooltip(
+                      message: 'Refresh orders',
+                      child: Material(
+                        color: AppColors.white.withValues(alpha: .08),
+                        borderRadius: BorderRadius.circular(16),
+                        child: InkWell(
+                          onTap: () => refreshHomeSalesBoard(ref, statuses),
+                          borderRadius: BorderRadius.circular(16),
+                          child: const SizedBox(
+                            height: 56,
+                            width: 56,
+                            child: Icon(
+                              Icons.refresh_rounded,
+                              color: AppColors.brandViolet,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                      borderSide: BorderSide(color: AppColors.brandViolet),
-                    ),
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 18),
                 Expanded(
@@ -146,11 +208,7 @@ class HomeOrdersBoard extends ConsumerWidget {
                     builder: (context, constraints) {
                       if (boardState.status == HomeStatus.loading &&
                           statuses.isEmpty) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.brandViolet,
-                          ),
-                        );
+                        return const SalesBoardShimmer(isMobile: false);
                       }
 
                       if (statuses.isEmpty) {
@@ -196,10 +254,6 @@ class HomeOrdersBoard extends ConsumerWidget {
                                               orderId,
                                               statuses[index],
                                             );
-                                        Alert.showSnackBar(
-                                          'Moved order to ${statuses[index].label}',
-                                          type: SnackBarType.success,
-                                        );
                                       },
                                     ),
                                   ),
@@ -227,10 +281,6 @@ class HomeOrdersBoard extends ConsumerWidget {
                                     ref
                                         .read(homeProvider.notifier)
                                         .moveOrder(orderId, statuses[index]);
-                                    Alert.showSnackBar(
-                                      'Moved order to ${statuses[index].label}',
-                                      type: SnackBarType.success,
-                                    );
                                   },
                                 ),
                               ),
@@ -375,6 +425,24 @@ class _OrderLane extends StatelessWidget {
                           state: pagingState,
                           fetchNextPage: fetchNextPage,
                           builderDelegate: PagedChildBuilderDelegate<KdsSale>(
+                            firstPageProgressIndicatorBuilder: (context) {
+                              return const Padding(
+                                padding: EdgeInsets.all(10),
+                                child: LaneContentShimmer(isMobile: false),
+                              );
+                            },
+                            newPageProgressIndicatorBuilder: (context) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                child: LaneContentShimmer(
+                                  isMobile: false,
+                                  itemCount: 2,
+                                ),
+                              );
+                            },
                             noItemsFoundIndicatorBuilder: (context) {
                               if (searchQuery.trim().isNotEmpty) {
                                 return const EmptyWidget(

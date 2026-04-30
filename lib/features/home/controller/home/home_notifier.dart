@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:duxbe_kds/features/auth/auth.dart';
 import 'package:duxbe_kds/features/home/domain/models/home_models.dart';
 import 'package:duxbe_kds/features/home/domain/repositories/home_repositories.dart';
-import 'package:duxbe_kds/shared/providers/supabase_provider/sales_realtime_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,18 +12,18 @@ part 'home_notifier.g.dart';
 
 @Riverpod(keepAlive: false)
 class HomeNotifier extends _$HomeNotifier {
+  static const Duration _minimumLoadingDuration = Duration(milliseconds: 300);
+
   final FormGroup form = FormGroup({
     'search_query': FormControl<String>(value: ''),
   });
+
+  int _loadGeneration = 0;
 
   @override
   HomeState build() {
     ref.listen(selectedBusinessProvider, (previous, next) {
       loadForBusiness(businessId: next?.businessId);
-    });
-    ref.listen(salesRealtimeProvider, (_, next) {
-      if (!ref.mounted || !next.hasValue) return;
-      state = state.copyWith(ordersRevision: state.ordersRevision + 1);
     });
 
     ref.onDispose(form.dispose);
@@ -81,9 +80,25 @@ class HomeNotifier extends _$HomeNotifier {
       if (businessId == null) {
         return;
       }
+
+      final loadGeneration = ++_loadGeneration;
+      final startedAt = DateTime.now();
       final homeRepository = ref.read(homeRepoProvider);
       final saleStatuses = await homeRepository.getSaleStatuses();
-      if (state.selectedBusinessId != businessId) {
+      if (!ref.mounted ||
+          state.selectedBusinessId != businessId ||
+          loadGeneration != _loadGeneration) {
+        return;
+      }
+
+      final elapsed = DateTime.now().difference(startedAt);
+      if (elapsed < _minimumLoadingDuration) {
+        await Future<void>.delayed(_minimumLoadingDuration - elapsed);
+      }
+
+      if (!ref.mounted ||
+          state.selectedBusinessId != businessId ||
+          loadGeneration != _loadGeneration) {
         return;
       }
 
@@ -109,8 +124,6 @@ class HomeNotifier extends _$HomeNotifier {
         return;
       }
       await ref.read(homeRepoProvider).updateSaleStatus(orderId, statusId);
-      if (!ref.mounted) return;
-      state = state.copyWith(ordersRevision: state.ordersRevision + 1);
     } catch (_) {
       // Keep the local board optimistic if persistence fails.
     }

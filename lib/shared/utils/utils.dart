@@ -6,5 +6,6 @@ export 'exceptions.dart';
 export 'extensions.dart';
 export 'formatters.dart';
 export 'helpers.dart';
+export 'shimmer.dart';
 export 'pdf/pdf.dart';
 export 'router.dart';

@@ -10,15 +10,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 ///
 /// The app listens to this stream and refreshes the paged sales queries so the
 /// board updates on other devices without a manual refresh.
-final salesRealtimeProvider = StreamProvider.autoDispose<void>((ref) {
+final salesRealtimeProvider =
+    StreamProvider.autoDispose<PostgresChangePayload>((ref) {
+  ref.keepAlive();
+
   final selectedBusiness = ref.watch(selectedBusinessProvider);
   final businessId = selectedBusiness?.businessId.trim();
   if (businessId == null || businessId.isEmpty) {
-    return const Stream<void>.empty();
+    return const Stream<PostgresChangePayload>.empty();
   }
 
   final supabase = ref.watch(supabaseProvider);
-  final controller = StreamController<void>.broadcast();
+  final controller = StreamController<PostgresChangePayload>.broadcast();
 
   final channel = supabase
       .channel('sales-realtime-$businessId')
@@ -31,9 +34,9 @@ final salesRealtimeProvider = StreamProvider.autoDispose<void>((ref) {
           column: 'business_id',
           value: businessId,
         ),
-        callback: (_) {
+        callback: (payload) {
           if (!controller.isClosed) {
-            controller.add(null);
+            controller.add(payload);
           }
         },
       )

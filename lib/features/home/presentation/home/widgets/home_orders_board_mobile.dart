@@ -3,6 +3,7 @@ import 'package:duxbe_kds/features/home/controller/home/home_notifier.dart';
 import 'package:duxbe_kds/features/home/controller/home/home_order_lane_notifier.dart';
 import 'package:duxbe_kds/features/home/controller/home/home_state.dart';
 import 'package:duxbe_kds/features/home/domain/models/home_models.dart';
+import 'package:duxbe_kds/features/home/presentation/home/widgets/home_sales_refresh.dart';
 import 'package:duxbe_kds/shared/shared.dart';
 import 'package:duxbe_kds/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,7 @@ class _HomeOrdersBoardMobileState extends ConsumerState<HomeOrdersBoardMobile> {
 
     if (statuses.isEmpty) {
       if (boardState.status == HomeStatus.loading) {
-        return const Center(
-          child: CircularProgressIndicator(color: AppColors.brandViolet),
-        );
+        return const SalesBoardShimmer(isMobile: true);
       }
 
       return Center(
@@ -102,39 +101,65 @@ class _HomeOrdersBoardMobileState extends ConsumerState<HomeOrdersBoardMobile> {
             completedOrders: completedOrders,
           ),
           const SizedBox(height: 14),
-          ReactiveText<String>(
-            formControlName: 'search_query',
-            onChanged: (control) => ref
-                .read(homeProvider.notifier)
-                .setSearchQuery(control.value ?? ''),
-            decoration: InputDecoration(
-              hintText: 'Search by customer, table, order...',
-              prefixIcon: const Icon(Icons.search_rounded),
-              filled: true,
-              fillColor: AppColors.white,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 14,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide(
-                  color: AppColors.greyBorder.withValues(alpha: .96),
+          Row(
+            children: [
+              Expanded(
+                child: ReactiveText<String>(
+                  formControlName: 'search_query',
+                  onChanged: (control) => ref
+                      .read(homeProvider.notifier)
+                      .setSearchQuery(control.value ?? ''),
+                  decoration: InputDecoration(
+                    hintText: 'Search by customer, table, order...',
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    filled: true,
+                    fillColor: AppColors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: AppColors.greyBorder.withValues(alpha: .96),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide(
+                        color: AppColors.greyBorder.withValues(alpha: .96),
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                      borderSide: BorderSide(color: AppColors.brandViolet),
+                    ),
+                  ),
                 ),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide(
-                  color: AppColors.greyBorder.withValues(alpha: .96),
+              const SizedBox(width: 10),
+              Tooltip(
+                message: 'Refresh orders',
+                child: Material(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  child: InkWell(
+                    onTap: () => refreshHomeSalesBoard(ref, statuses),
+                    borderRadius: BorderRadius.circular(18),
+                    child: const SizedBox(
+                      height: 54,
+                      width: 54,
+                      child: Icon(
+                        Icons.refresh_rounded,
+                        color: AppColors.brandViolet,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              focusedBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(18)),
-                borderSide: BorderSide(color: AppColors.brandViolet),
-              ),
-            ),
+            ],
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 18),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -170,6 +195,21 @@ class _HomeOrdersBoardMobileState extends ConsumerState<HomeOrdersBoardMobile> {
                   fetchNextPage: fetchNextPage,
                   padding: const EdgeInsets.only(bottom: 8),
                   builderDelegate: PagedChildBuilderDelegate<KdsSale>(
+                    firstPageProgressIndicatorBuilder: (context) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        child: LaneContentShimmer(isMobile: true),
+                      );
+                    },
+                    newPageProgressIndicatorBuilder: (context) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        child: LaneContentShimmer(
+                          isMobile: true,
+                          itemCount: 2,
+                        ),
+                      );
+                    },
                     noItemsFoundIndicatorBuilder: (context) {
                       if (boardState.searchQuery.trim().isNotEmpty) {
                         return const EmptyWidget(text: 'No matching orders');

@@ -8,7 +8,6 @@ class HomeState {
     this.statuses = const [],
     this.selectedBusinessId,
     this.searchQuery = '',
-    this.ordersRevision = 0,
     this.error = '',
   });
 
@@ -18,7 +17,6 @@ class HomeState {
   final List<Status> statuses;
   final String? selectedBusinessId;
   final String searchQuery;
-  final int ordersRevision;
   final String error;
 
   HomeState copyWith({
@@ -26,7 +24,6 @@ class HomeState {
     List<Status>? statuses,
     String? selectedBusinessId,
     String? searchQuery,
-    int? ordersRevision,
     String? error,
   }) {
     return HomeState(
@@ -34,7 +31,6 @@ class HomeState {
       statuses: statuses ?? this.statuses,
       selectedBusinessId: selectedBusinessId ?? this.selectedBusinessId,
       searchQuery: searchQuery ?? this.searchQuery,
-      ordersRevision: ordersRevision ?? this.ordersRevision,
       error: error ?? this.error,
     );
   }
