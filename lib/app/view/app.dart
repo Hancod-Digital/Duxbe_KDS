@@ -1,4 +1,5 @@
 import 'package:duxbe_kds/env.dart';
+import 'package:duxbe_kds/features/auth/auth.dart';
 import 'package:duxbe_kds/shared/l10n/arb/app_localizations.dart';
 import 'package:duxbe_kds/shared/providers/ip_config_provider/ip_config_provider.dart';
 import 'package:duxbe_kds/shared/providers/locale_provider/locale_provider.dart';
@@ -38,7 +39,10 @@ class App extends ConsumerWidget {
         routerConfig: appRouter.router,
         debugShowCheckedModeBanner: false,
         theme: ref.watch(themeProvider),
-        title: 'App',
+        title: switch (ref.watch(selectedBusinessProvider)?.name.trim()) {
+          final name? when name.isNotEmpty => '$name · Duxbe KDS',
+          _ => 'Duxbe KDS',
+        },
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: ref.watch(localeProvider),
