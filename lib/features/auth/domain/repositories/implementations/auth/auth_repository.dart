@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:crypto/crypto.dart';
 import 'package:duxbe_kds/features/auth/domain/models/business/business_model.dart';
 import 'package:duxbe_kds/features/auth/domain/models/role_pemissions/role_pemissions_model.dart';
 import 'package:duxbe_kds/features/auth/domain/models/route_item.dart';
@@ -10,14 +6,11 @@ import 'package:duxbe_kds/features/auth/domain/models/user/user_model.dart';
 import 'package:duxbe_kds/features/auth/domain/repositories/interfaces/auth/i_auth_repository.dart';
 import 'package:duxbe_kds/shared/constants/db_constants.dart';
 import 'package:duxbe_kds/shared/constants/rpc_constants.dart';
-import 'package:duxbe_kds/shared/providers/env_provider/env_provider.dart';
 import 'package:duxbe_kds/shared/providers/supabase_provider/supabase_provider.dart';
 import 'package:duxbe_kds/shared/utils/exceptions.dart';
 import 'package:duxbe_kds/shared/utils/router.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'auth_repository.g.dart';
@@ -30,37 +23,6 @@ class AuthRepository implements IAuthRepository {
 
   final Ref ref;
   final SupabaseClient _supabaseClient;
-
-  @override
-  Future<AuthResponse> verifyResetPassword(String email, String token) async {
-    try {
-      final resp = await _supabaseClient.auth.verifyOTP(
-        type: OtpType.recovery,
-        email: email,
-        token: token,
-        //  saveSession: false,
-      );
-      return resp;
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode);
-    }
-  }
-
-  @override
-  Future<void> forgotPassword(String email) async {
-    try {
-      final environment = ref.read(envProvider);
-      final storeUrl = environment.ENV == 'prod'
-          ? 'https://business.duxbe.com'
-          : 'https://dev.duxbe.com';
-      await _supabaseClient.auth.resetPasswordForEmail(
-        email,
-        redirectTo: '$storeUrl/new_password',
-      );
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode);
-    }
-  }
 
   @override
   Future<EmployeeModel?> getUserDetails({String? businessId}) async {
@@ -115,33 +77,6 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<void> signOut() async {
     await _supabaseClient.auth.signOut();
-  }
-
-  @override
-  Future<UserResponse> createPassword(
-    String password, {
-    String? token,
-    String? refreshToken,
-  }) async {
-    try {
-      if (refreshToken != null) {
-        await _supabaseClient.auth.setSession(refreshToken);
-      }
-      final userId = _supabaseClient.auth.currentUser!.id;
-
-      if (token != null) {
-        await _supabaseClient.rpc<void>(
-          'accept_employee_invite',
-          params: {'p_invite_token': token, 'p_user_id': userId},
-        );
-      }
-
-      return await _supabaseClient.auth.updateUser(
-        UserAttributes(password: password),
-      );
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode);
-    }
   }
 
   @override
@@ -354,41 +289,6 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<CreateBusinessResponse> createBusiness(
-    Map<String, dynamic> signUpDetails,
-  ) async {
-    try {
-      final businessPayload = {
-        'name': signUpDetails['name'] ?? 'Business Name',
-        'user_name': signUpDetails['name'],
-        'email': signUpDetails['email'],
-        'phone_number': signUpDetails['phone_number'],
-        'business_type': signUpDetails['business_type'],
-        'currency': signUpDetails['currency'],
-        'other_business_type': signUpDetails['business_type_others'],
-      };
-
-      final response = await _supabaseClient.rpc<PostgrestMap>(
-        'create_business',
-        params: {
-          'p_business_data': businessPayload,
-          'p_uid': _supabaseClient.auth.currentUser?.id,
-        },
-      );
-
-      return CreateBusinessResponse.fromJson(response);
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode, details: e.toString());
-    } on PostgrestException catch (e) {
-      throw AppException(
-        e.message,
-        code: e.code,
-        details: e.details.toString(),
-      );
-    }
-  }
-
-  @override
   Future<void> sendOtp(String phone) async {
     try {
       await _supabaseClient.auth.signInWithOtp(phone: phone);
@@ -397,162 +297,9 @@ class AuthRepository implements IAuthRepository {
     }
   }
 
-  @override
-  Future<void> signInWithGoogle() async {
-    try {
-      final environment = ref.read(envProvider);
-      final storeUrl = environment.ENV == 'prod'
-          ? 'https://business.duxbe.com/oauth_callback'
-          : 'https://dev.duxbe.com/oauth_callback';
-
-      // On web, use Supabase OAuth redirect flow
-      await _supabaseClient.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: storeUrl,
-      );
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode);
-    } catch (e) {
-      throw AppException(e.toString());
-    }
-  }
-
-  @override
-  Future<TokenResponse> signInWithGoogleIdToken() async {
-    try {
-      // On native (Android/iOS), use the new google_sign_in API
-      const webClientId =
-          '141463328504-at2cjaid4b59nppeanj47gb5t4a5h7rm.apps.googleusercontent.com';
-      const iosClientId =
-          '141463328504-nuqs9jasre1jc67n3fle3829m9vr0u6k.apps.googleusercontent.com';
-
-      final signIn = GoogleSignIn.instance;
-
-      // Initialize with client IDs
-      await signIn.initialize(
-        clientId: iosClientId,
-        serverClientId: webClientId,
-      );
-
-      // Authenticate the user (shows native sign-in UI)
-      // authenticate() returns GoogleSignInAccount directly
-      final user = await signIn.authenticate(scopeHint: ['email', 'profile']);
-
-      // Get the ID token from the authenticated user
-      final idToken = user.authentication.idToken;
-
-      if (idToken == null) {
-        throw const AppException('No ID Token found.');
-      }
-
-      // Request authorization scopes to get the access token
-      final scopes = ['email', 'profile'];
-      final authorization =
-          await user.authorizationClient.authorizationForScopes(scopes) ??
-          await user.authorizationClient.authorizeScopes(scopes);
-
-      final tokenResponse = await verify(
-        type: 'google',
-        idToken: idToken,
-        accessToken: authorization.accessToken,
-      );
-
-      return tokenResponse;
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode);
-    } on GoogleSignInException catch (e) {
-      if (e.code == GoogleSignInExceptionCode.canceled) {
-        // User canceled, don't throw
-        throw const AppException('Google Sign-In canceled');
-      }
-      throw AppException('Google Sign-In error: ${e.description}');
-    } catch (e) {
-      throw AppException(e.toString());
-    }
-  }
-
   /// Generates a random nonce string for Apple Sign-In.
-  String _generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(
-      length,
-      (_) => charset[random.nextInt(charset.length)],
-    ).join();
-  }
 
   /// Returns the sha256 hash of [input] as a hex string.
-  String _sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
-
-  @override
-  Future<void> signInWithApple() async {
-    try {
-      final environment = ref.read(envProvider);
-      final storeUrl = environment.ENV == 'prod'
-          ? 'https://business.duxbe.com/oauth_callback'
-          : 'https://dev.duxbe.com/oauth_callback';
-
-      // For Android, Web, Windows and Linux use OAuth
-      await _supabaseClient.auth.signInWithOAuth(
-        OAuthProvider.apple,
-        authScreenLaunchMode: kIsWeb
-            ? LaunchMode.platformDefault
-            : LaunchMode.externalApplication,
-        redirectTo: kIsWeb ? null : storeUrl, // Provide your callback URL
-      );
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode);
-    } catch (e) {
-      throw AppException(e.toString());
-    }
-  }
-
-  @override
-  Future<TokenResponse> signInWithAppleIdToken() async {
-    try {
-      // Generate a raw nonce and its SHA-256 hash
-      final rawNonce = _generateNonce();
-      final hashedNonce = _sha256ofString(rawNonce);
-
-      // Request Apple credential natively
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-        nonce: hashedNonce,
-      );
-
-      final idToken = credential.identityToken;
-      if (idToken == null) {
-        throw const AppException('No ID Token found from Apple Sign-In.');
-      }
-
-      // Sign in to Supabase with the Apple ID token and raw nonce
-      final tokenResponse = await verify(
-        type: 'apple',
-        idToken: idToken,
-        nonce: rawNonce,
-      );
-
-      return tokenResponse;
-    } on SignInWithAppleAuthorizationException catch (e) {
-      if (e.code == AuthorizationErrorCode.canceled) {
-        // User canceled, don't throw
-        throw const AppException('Apple Sign-In canceled');
-      }
-      throw AppException('Apple Sign-In error: ${e.message}');
-    } on AuthException catch (e) {
-      throw AppException(e.message, code: e.statusCode);
-    } catch (e) {
-      throw AppException(e.toString());
-    }
-  }
 
   @override
   Future<TokenResponse> verify({

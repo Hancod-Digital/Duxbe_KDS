@@ -5,16 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hancod_theme/hancod_theme.dart';
 
 class LoginScreenMobile extends ConsumerStatefulWidget {
-  const LoginScreenMobile({
-    super.key,
-    this.onSubmit,
-    this.onGoogle,
-    this.onApple,
-  });
+  const LoginScreenMobile({super.key, this.onSubmit});
 
   final Future<void> Function()? onSubmit;
-  final Future<void> Function()? onGoogle;
-  final Future<void> Function()? onApple;
 
   @override
   ConsumerState<LoginScreenMobile> createState() => _LoginScreenMobileState();
@@ -32,25 +25,6 @@ class _LoginScreenMobileState extends ConsumerState<LoginScreenMobile> {
             Alert.error(error.toString());
           },
         );
-  }
-
-  Widget _socialButton({required Widget icon, required VoidCallback onTap}) {
-    return Material(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(10),
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.textfieldOutline),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 50),
-          child: icon,
-        ),
-      ),
-    );
   }
 
   @override
@@ -130,53 +104,6 @@ class _LoginScreenMobileState extends ConsumerState<LoginScreenMobile> {
                           onPress: () => _handleLogin(context, ref),
                         ),
                         const SizedBox(height: 20),
-                        // Stack(
-                        //   children: [
-                        //     const Divider(
-                        //       color: AppColors.brandViolet,
-                        //       thickness: 1,
-                        //     ),
-                        //     Center(
-                        //       child: Row(
-                        //         mainAxisSize: MainAxisSize.min,
-                        //         children: [
-                        //           Container(
-                        //             padding: const EdgeInsets.symmetric(
-                        //               horizontal: 16,
-                        //             ),
-                        //             alignment: Alignment.center,
-                        //             color: AppColors.white,
-                        //             child: Text(
-                        //               'Or continue with',
-                        //               style: AppText.mediumM.copyWith(
-                        //                 color: AppColors.stormyBlue,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        // const SizedBox(height: 20),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   spacing: 16,
-                        //   children: [
-                        //     _socialButton(
-                        //       icon: Assets.icons.google.svg(),
-                        //       onTap: () {
-                        //         widget.onGoogle?.call();
-                        //       },
-                        //     ),
-                        //     _socialButton(
-                        //       icon: Assets.icons.apple.svg(),
-                        //       onTap: () {
-                        //         widget.onApple?.call();
-                        //       },
-                        //     ),
-                        //   ],
-                        // ),
                       ],
                     ),
                   ),

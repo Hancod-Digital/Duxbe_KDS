@@ -1,14 +1,6 @@
 import 'package:duxbe_kds/features/auth/auth.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class IAuthRepository {
-  Future<void> forgotPassword(String email);
-  Future<AuthResponse> verifyResetPassword(String email, String token);
-  Future<UserResponse> createPassword(
-    String password, {
-    String? token,
-    String? refreshToken,
-  });
   Future<void> signOut();
   Future<EmployeeModel?> getUserDetails({String? businessId});
   Future<void> deleteAccount();
@@ -24,10 +16,6 @@ abstract class IAuthRepository {
   });
   Future<bool> checkUserExists(String? email, String? phone);
   Future<void> sendOtp(String phone);
-  Future<void> signInWithGoogle();
-  Future<TokenResponse> signInWithGoogleIdToken();
-  Future<void> signInWithApple();
-  Future<TokenResponse> signInWithAppleIdToken();
   Future<TokenResponse> verify({
     required String type,
     String? email,
@@ -38,7 +26,4 @@ abstract class IAuthRepository {
     String? accessToken,
     String? nonce,
   });
-  Future<CreateBusinessResponse> createBusiness(
-    Map<String, dynamic> signUpDetails,
-  );
 }

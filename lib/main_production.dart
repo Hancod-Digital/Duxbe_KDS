@@ -25,7 +25,7 @@ Future<void> main() async {
   // );
 
   // Used to remove trailing # in urls
-  setUrlStrategy(const PathUrlStrategy());
+  usePathUrlStrategy();
 
   // Envrionment
   const env = ProductionEnv();

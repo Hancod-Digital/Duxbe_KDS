@@ -1,49 +1,81 @@
 import 'dart:async';
 
+import 'package:duxbe_kds/env.dart';
 import 'package:duxbe_kds/features/auth/auth.dart';
 import 'package:duxbe_kds/shared/constants/db_constants.dart';
 import 'package:duxbe_kds/shared/providers/supabase_provider/supabase_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Emits whenever the current business gets a row-level change in `sales`.
+/// How often the board reloads when realtime is unavailable.
+const salesPollInterval = Duration(seconds: 15);
+
+/// Emits whenever the current business's `sales` rows may have changed.
 ///
-/// The app listens to this stream and refreshes the paged sales queries so the
-/// board updates on other devices without a manual refresh.
-final salesRealtimeProvider =
-    StreamProvider.autoDispose<PostgresChangePayload>((ref) {
+/// Uses Supabase realtime when `REALTIME_ENABLED` is on. If realtime is off
+/// (prod tenant rejects the websocket) or the channel errors/times out, it
+/// falls back to polling every [salesPollInterval], so the board still
+/// updates on its own.
+final salesRealtimeProvider = StreamProvider.autoDispose<DateTime>((ref) {
   ref.keepAlive();
 
-  final selectedBusiness = ref.watch(selectedBusinessProvider);
-  final businessId = selectedBusiness?.businessId.trim();
+  final businessId = ref.watch(selectedBusinessProvider)?.businessId.trim();
   if (businessId == null || businessId.isEmpty) {
-    return const Stream<PostgresChangePayload>.empty();
+    return const Stream<DateTime>.empty();
   }
 
-  final supabase = ref.watch(supabaseProvider);
-  final controller = StreamController<PostgresChangePayload>.broadcast();
+  final controller = StreamController<DateTime>.broadcast();
+  void emit() {
+    if (!controller.isClosed) controller.add(DateTime.now());
+  }
 
-  final channel = supabase
-      .channel('sales-realtime-$businessId')
-      .onPostgresChanges(
-        event: PostgresChangeEvent.all,
-        schema: 'public',
-        table: DbConstants.sales,
-        filter: PostgresChangeFilter(
-          type: PostgresChangeFilterType.eq,
-          column: 'business_id',
-          value: businessId,
-        ),
-        callback: (payload) {
-          if (!controller.isClosed) {
-            controller.add(payload);
+  var disposed = false;
+  Timer? pollTimer;
+  void startPolling() {
+    if (disposed) return;
+    pollTimer ??= Timer.periodic(salesPollInterval, (_) => emit());
+  }
+
+  RealtimeChannel? channel;
+  final supabase = ref.watch(supabaseProvider);
+
+  if (Environment.REALTIME_ENABLED) {
+    channel = supabase
+        .channel('sales-realtime-$businessId')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: DbConstants.sales,
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'business_id',
+            value: businessId,
+          ),
+          callback: (_) => emit(),
+        )
+        .subscribe((status, error) {
+          switch (status) {
+            case RealtimeSubscribeStatus.subscribed:
+              pollTimer?.cancel();
+              pollTimer = null;
+              // Catch anything missed while (re)connecting.
+              emit();
+            case RealtimeSubscribeStatus.channelError:
+            case RealtimeSubscribeStatus.timedOut:
+            case RealtimeSubscribeStatus.closed:
+              debugPrint('KDS realtime $status ($error); polling instead');
+              startPolling();
           }
-        },
-      )
-      .subscribe();
+        });
+  } else {
+    startPolling();
+  }
 
   ref.onDispose(() {
-    unawaited(supabase.removeChannel(channel));
+    disposed = true;
+    pollTimer?.cancel();
+    if (channel != null) unawaited(supabase.removeChannel(channel));
     controller.close();
   });
 

@@ -2,9 +2,7 @@ import 'package:duxbe_kds/shared/shared.dart';
 import 'package:duxbe_kds/shared/utils/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hancod_theme/hancod_theme.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 class EnterPasswordScreenWeb extends ConsumerStatefulWidget {
   const EnterPasswordScreenWeb({
@@ -147,45 +145,6 @@ class _EnterPasswordScreenWebState
                                     onPress: () => _handleNext(context, ref),
                                   ),
                                   const SizedBox(height: 16),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: InkWell(
-                                      onTap: () {
-                                        final form =
-                                            ReactiveForm.of(context)!
-                                                as FormGroup;
-                                        context.pushNamed(
-                                          AppRouter.forgotPassword,
-                                          queryParameters: {
-                                            'email': form
-                                                .value['email_or_phone']
-                                                ?.toString(),
-                                          },
-                                        );
-                                      },
-                                      child: TextButton(
-                                        child: Text(
-                                          context.l10n.forgotPassword,
-                                          style: AppText.mediumM.copyWith(
-                                            color: AppColors.brandViolet,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          final form =
-                                              ReactiveForm.of(context)!
-                                                  as FormGroup;
-                                          context.pushNamed(
-                                            AppRouter.forgotPassword,
-                                            queryParameters: {
-                                              'email': form
-                                                  .value['email_or_phone']
-                                                  ?.toString(),
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

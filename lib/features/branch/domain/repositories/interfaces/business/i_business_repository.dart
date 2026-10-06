@@ -2,7 +2,6 @@ import 'package:duxbe_kds/features/auth/auth.dart';
 import 'package:duxbe_kds/features/branch/branch.dart';
 import 'package:duxbe_kds/shared/models/country_model/country_model.dart';
 import 'package:duxbe_kds/shared/models/paginated_response.dart';
-import 'package:duxbe_kds/shared/shared.dart';
 
 abstract class IBusinessRepository {
   Future<Business?> getBusinessWithId({required String businessId});

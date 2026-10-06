@@ -1,4 +1,3 @@
-import 'package:duxbe_kds/shared/utils/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hancod_theme/hancod_theme.dart';
 

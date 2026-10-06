@@ -13,7 +13,6 @@ import 'package:hancod_theme/hancod_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeOrdersBoard extends ConsumerStatefulWidget {
   const HomeOrdersBoard({super.key});
@@ -23,14 +22,14 @@ class HomeOrdersBoard extends ConsumerStatefulWidget {
 }
 
 class _HomeOrdersBoardState extends ConsumerState<HomeOrdersBoard> {
-  ProviderSubscription<AsyncValue<PostgresChangePayload>>?
+  ProviderSubscription<AsyncValue<DateTime>>?
   _salesRealtimeSubscription;
 
   @override
   void initState() {
     super.initState();
     _salesRealtimeSubscription = ref
-        .listenManual<AsyncValue<PostgresChangePayload>>(
+        .listenManual<AsyncValue<DateTime>>(
           salesRealtimeProvider,
           (previous, next) {
             final statuses = ref.read(homeProvider).statuses;

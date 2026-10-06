@@ -1,72 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:commingle_money/commingle_money.dart' as cm;
-
 import 'package:duxbe_kds/features/auth/domain/models/route_item.dart';
 import 'package:duxbe_kds/features/auth/domain/models/user/user_model.dart';
 import 'package:duxbe_kds/features/auth/domain/repositories/implementations/auth/auth_repository.dart';
 import 'package:duxbe_kds/features/branch/domain/repositories/implementations/business/business_repository.dart';
-import 'package:duxbe_kds/features/organization/controller/organization_notifier.dart';
-import 'package:duxbe_kds/features/organization/models/organization.dart';
-import 'package:duxbe_kds/shared/models/country_model/country_model.dart';
 import 'package:duxbe_kds/shared/providers/shared_prefs_provider/shared_prefs_provider.dart';
 import 'package:riverpod_annotation/experimental/json_persist.dart';
 import 'package:riverpod_annotation/experimental/persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'business_notifier.g.dart';
-
-// @riverpod
-// Future<List<FiscalYear>> fiscalYears(Ref ref) async =>
-//     ref.watch(businessRepoProvider).getFiscalYears();
-
-@riverpod
-Future<Country> getCountryById(Ref ref, String isoCode) async =>
-    ref.watch(businessRepoProvider).getCountryByIso(id: isoCode);
-
-@Riverpod(keepAlive: true)
-String currency(Ref ref) => _resolveCurrencyCode(
-  selectedBusiness: ref.watch(selectedBusinessProvider),
-  organization: ref.watch(organizationProvider),
-);
-
-@Riverpod(keepAlive: true)
-int currencyDecimalDigits(Ref ref) =>
-    ref.watch(selectedBusinessProvider)?.business?.currency?.decimalDigits ??
-    cm.Currency.getPrecision(
-      _resolveCurrencyCode(
-        selectedBusiness: ref.watch(selectedBusinessProvider),
-        organization: ref.watch(organizationProvider),
-      ),
-    );
-
-String _resolveCurrencyCode({
-  required EmployeeAccessModel? selectedBusiness,
-  required OrganizationDetails? organization,
-}) {
-  final subscriptionCurrency = organization?.activeSubscriptionDetails?.currency
-      ?.trim();
-  if (subscriptionCurrency != null && subscriptionCurrency.isNotEmpty) {
-    return subscriptionCurrency.toUpperCase();
-  }
-
-  final businessCurrency = selectedBusiness?.business?.currency?.code?.trim();
-  if (businessCurrency != null && businessCurrency.isNotEmpty) {
-    return businessCurrency.toUpperCase();
-  }
-
-  final planCurrency = organization
-      ?.activeSubscriptionDetails
-      ?.planDetails
-      ?.defaultCurrency
-      ?.trim();
-  if (planCurrency != null && planCurrency.isNotEmpty) {
-    return planCurrency.toUpperCase();
-  }
-
-  return 'USD';
-}
 
 @JsonPersist()
 @Riverpod(keepAlive: true)

@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "dev": "han-pos-demo",
+    "prod": "duxbe-application"
+  },
+  "targets": {
+    "han-pos-demo": {
+      "hosting": { "dev": ["dev-duxbe-kds"] }
+    },
+    "duxbe-application": {
+      "hosting": { "prod": ["duxbe-kds"] }
+    }
+  }
+}

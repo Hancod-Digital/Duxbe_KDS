@@ -1,11 +1,12 @@
 import 'package:duxbe_kds/shared/models/currency_model/currency_model.dart';
-import 'package:duxbe_kds/shared/services/pdf_service.dart';
 import 'package:duxbe_kds/shared/utils/assets.gen.dart';
 import 'package:duxbe_kds/features/branch/domain/models/whatsapp_integration/whatsapp_integration_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'business_model.freezed.dart';
 part 'business_model.g.dart';
+
+enum PrintFormats { a4, roll80, roll57 }
 
 enum BusinessType { retail, automotive, foodAndBeverage, others }
 

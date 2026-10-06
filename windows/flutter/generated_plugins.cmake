@@ -4,25 +4,11 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
-  audioplayers_windows
   connectivity_plus
-  file_selector_windows
-  firebase_auth
-  firebase_core
-  flutter_inappwebview_windows
-  flutter_libserialport
-  flutter_timezone
-  irondash_engine_context
-  permission_handler_windows
-  printing
-  share_plus
-  super_native_extensions
-  universal_ble
   url_launcher_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  flutter_local_notifications_windows
   jni
 )
 

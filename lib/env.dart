@@ -15,6 +15,13 @@ class Environment {
     'RUNTIME_CONFIG_TIMEOUT_MS',
   );
   static const ENV = String.fromEnvironment('ENV');
+
+  /// False on tenants whose Supabase rejects the realtime websocket (prod);
+  /// the KDS board then polls instead.
+  static const REALTIME_ENABLED = bool.fromEnvironment(
+    'REALTIME_ENABLED',
+    defaultValue: true,
+  );
 }
 
 abstract class IEnvironment {

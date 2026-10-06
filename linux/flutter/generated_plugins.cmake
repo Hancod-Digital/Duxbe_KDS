@@ -3,14 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_linux
-  file_selector_linux
-  flutter_libserialport
-  flutter_timezone
   gtk
-  irondash_engine_context
-  printing
-  super_native_extensions
   url_launcher_linux
 )
 

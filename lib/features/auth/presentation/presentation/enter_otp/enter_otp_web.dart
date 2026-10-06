@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:duxbe_kds/shared/shared.dart';
 import 'package:duxbe_kds/shared/utils/assets.gen.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hancod_theme/hancod_theme.dart';
 import 'package:pinput/pinput.dart';
-import 'package:smart_auth/smart_auth.dart';
 
 class EnterOtpScreenWeb extends ConsumerStatefulWidget {
   const EnterOtpScreenWeb({

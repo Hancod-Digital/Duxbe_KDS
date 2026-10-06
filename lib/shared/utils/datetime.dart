@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class DateTimeUtils {
   // 2023 March 9th 04:00 PM

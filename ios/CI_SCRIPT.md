@@ -30,7 +30,7 @@ Create two separate workflows for different environments:
 - **Environment**: Development
 - **Scheme**: `development`
 - **Configuration**: `Release-development`
-- **Bundle ID**: `com.duxbe.business.dev`
+- **Bundle ID**: `com.duxbe.kds.dev`
 
 #### Production Workflow
 
@@ -39,7 +39,7 @@ Create two separate workflows for different environments:
 - **Environment**: Production
 - **Scheme**: `production`
 - **Configuration**: `Release-production`
-- **Bundle ID**: `com.duxbe.business`
+- **Bundle ID**: `com.duxbe.kds`
 
 ### 3. Build Settings
 

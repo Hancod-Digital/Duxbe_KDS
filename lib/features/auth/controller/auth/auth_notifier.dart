@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:duxbe_kds/features/auth/auth.dart';
 
@@ -61,66 +59,6 @@ class AuthNotifier extends _$AuthNotifier {
         // ..invalidate(usbPrinterServiceProvider)
         ..invalidateSelf();
     });
-  }
-
-  Future<bool> verifyResetPassword(String email, String token) async {
-    try {
-      state = state.copyWith(status: AuthStatus.loading);
-      final authResponse = await _authRepository.verifyResetPassword(
-        email,
-        token,
-      );
-      state = state.copyWith(authResponse: authResponse);
-
-      return true;
-    } catch (e) {
-      Alert.showSnackBar(e.toString(), type: SnackBarType.error);
-
-      return false;
-    } finally {
-      state = state.copyWith(status: AuthStatus.success);
-    }
-  }
-
-  Future<bool> forgotPassword(String email) async {
-    try {
-      state = state.copyWith(status: AuthStatus.loading);
-      await _authRepository.forgotPassword(email);
-
-      Alert.showSnackBar(
-        AppRouter.l10n.passwordResetOtpSentSuccessfully,
-        type: SnackBarType.success,
-      );
-      return true;
-    } catch (e) {
-      Alert.showSnackBar(e.toString(), type: SnackBarType.error);
-
-      return false;
-    } finally {
-      state = state.copyWith(status: AuthStatus.success);
-    }
-  }
-
-  Future<bool> createPassword(
-    String password, {
-    String? token,
-    String? refreshToken,
-  }) async {
-    try {
-      state = state.copyWith(status: AuthStatus.loading);
-      await _authRepository.createPassword(
-        password,
-        token: token,
-        refreshToken: refreshToken,
-      );
-
-      return true;
-    } catch (e) {
-      Alert.showSnackBar(e.toString(), type: SnackBarType.error);
-      return false;
-    } finally {
-      state = state.copyWith(status: AuthStatus.success);
-    }
   }
 
   Future<void> updateUserPassword(
@@ -228,43 +166,6 @@ class AuthNotifier extends _$AuthNotifier {
       Alert.showSnackBar(e.toString(), type: SnackBarType.error);
       state = state.copyWith(status: AuthStatus.error);
       rethrow;
-    }
-  }
-
-  Future<void> createBusiness(
-    Map<String, dynamic> signUpDetails, {
-    String? token,
-  }) async {
-    try {
-      final refreshToken =
-          token ?? ref.read(supabaseProvider).auth.currentSession!.refreshToken;
-
-      if (refreshToken == null) {
-        throw Exception('Session is null');
-      }
-      state = state.copyWith(status: AuthStatus.loading);
-
-      await ref.read(supabaseProvider).auth.setSession(refreshToken);
-      final response = await _authRepository.createBusiness(signUpDetails);
-      await ref
-          .read(
-            chooseModulesProvider(
-              signUpDetails['business_type']?.toString(),
-            ).notifier,
-          )
-          .savePreferences(businessId: response.businessId);
-
-      unawaited(setSession(refreshToken));
-    } on AppException catch (e) {
-      Alert.showSnackBar(
-        "${e.message} ${e.details ?? ''}",
-        type: SnackBarType.error,
-      );
-    } catch (e) {
-      log(e.toString());
-      Alert.showSnackBar(e.toString(), type: SnackBarType.error);
-    } finally {
-      state = state.copyWith(status: AuthStatus.success);
     }
   }
 }

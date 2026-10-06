@@ -9,3 +9,6 @@ build/
 .packages
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# Firebase
+.firebase/

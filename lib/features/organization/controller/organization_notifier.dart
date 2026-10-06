@@ -12,14 +12,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'organization_notifier.g.dart';
 
-@Riverpod()
-Future<OrganizationDetails?> organizationById(
-  Ref ref,
-  String? organizationId,
-) async => organizationId == null
-    ? null
-    : ref.watch(orgRepoProvider).getOrganizationFromId(organizationId);
-
 @JsonPersist()
 @Riverpod(keepAlive: true)
 class OrganizationNotifier extends _$OrganizationNotifier {

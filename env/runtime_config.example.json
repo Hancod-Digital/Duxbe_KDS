@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "active": "staging",
+  "targets": {
+    "staging": {
+      "server_url": "https://acagaylcxrkpjrdldcie.supabase.co",
+      "anon_key": "REPLACE_WITH_STAGING_ANON_KEY",
+      "referral_api_url": "https://acagaylcxrkpjrdldcie.supabase.co/functions/v1/referral-attribution",
+      "env": "staging",
+      "realtime_enabled": true
+    },
+    "production": {
+      "server_url": "https://tgrtjlqehgpzdjrlrxxl.supabase.co",
+      "anon_key": "REPLACE_WITH_PROD_ANON_KEY",
+      "referral_api_url": "https://api.duxbe.app/functions/v1/referral-attribution",
+      "env": "prod",
+      "realtime_enabled": false
+    }
+  }
+}
